@@ -38,6 +38,12 @@
 
 @implementation ALAssetAdapter
 
+-(void)setAsset:(ALAsset *)asset
+{
+    _asset = asset;
+    [self url];
+}
+
 -(CGFloat)duration
 {
     if (_duration == nil){
