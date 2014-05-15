@@ -9,8 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "ASGalleryViewController.h"
 
+@protocol ASGalleryAsyncImageProviding <NSObject>
 
-@interface ASGalleryAssetBase : NSObject<ASGalleryAsset>
+@optional
+-(void)imageForType:(ASGalleryImageType)imageType completion:(void(^)(UIImage *image))completion;
+
+@end
+
+@interface ASGalleryAssetBase : NSObject<ASGalleryAsset, ASGalleryAsyncImageProviding>
 
 -(UIImage*)imageForType:(ASGalleryImageType)imageType;
 -(CGFloat)duration;
