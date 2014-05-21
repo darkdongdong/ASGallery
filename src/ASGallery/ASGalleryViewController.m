@@ -319,6 +319,7 @@
 
 -(void)reloadData
 {
+    [[self visiblePageForIndex:self.selectedIndex] stop];
     pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
     [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:YES];
 }
