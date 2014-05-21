@@ -46,6 +46,7 @@
 @property(nonatomic,strong,readonly) ASImageScrollView* imageView;
 
 -(void)pause;
+-(void)stop;
 -(void)prepareForReuse;
 -(void)updateFrame:(CGRect)frame;
 -(void)resetToDefaults;

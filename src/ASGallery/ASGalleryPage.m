@@ -217,6 +217,14 @@ static UIImage* playButtonImage()
     [moviePlayer pause];
 }
 
+-(void)stop
+{
+    if ( _asset.isVideo )
+    {
+        [moviePlayer stop];
+        [self moviePlayBackDidFinish:nil];
+    }
+}
 
 -(void)play
 {
@@ -273,8 +281,7 @@ static UIImage* playButtonImage()
     _asset = asset;
    
     imageScrollView.isVideo = _asset.isVideo;
-    if (_asset.isVideo)
-    {
+    if (_asset.isVideo) {
         playButton = [self createPlayButton];
         [self addSubview:playButton];
     }
