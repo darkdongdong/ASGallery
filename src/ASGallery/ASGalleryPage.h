@@ -26,12 +26,12 @@
 
 #import "ASGalleryViewController.h"
 
-
+@class ASGalleryPage;
 @protocol ASGalleryPageDelegate <NSObject>
 
 @optional
--(void)playButtonPressed;
--(void)playbackFinished;
+-(void)playButtonPressed:(ASGalleryPage *)page;
+-(void)playbackFinished:(ASGalleryPage *)page;
 
 @end
 
@@ -39,7 +39,7 @@
 @protocol ASGalleryAsset;
 @interface ASGalleryPage : UIView
 
-@property(nonatomic,unsafe_unretained) id<ASGalleryPageDelegate> delegate;
+@property(nonatomic, weak) id<ASGalleryPageDelegate> delegate;
 @property(nonatomic,strong) id<ASGalleryAsset> asset;
 @property(nonatomic,assign) ASGalleryImageType imageType;
 

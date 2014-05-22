@@ -95,7 +95,7 @@ typedef void (^ASImageSetBlock)(ASGalleryImageType type, UIImage* image);
 
 @property (nonatomic,assign) BOOL doNotHideBarsOnScrollBegin;
 
-
+-(void)stopVideo;
 -(void)reloadData;
 
 - (ASGalleryPage*)visiblePageForIndex:(NSUInteger)index;

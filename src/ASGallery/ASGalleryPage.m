@@ -201,14 +201,15 @@ static UIImage* playButtonImage()
 /*  video support */
 -(void)moviePlayBackDidFinish:(NSDictionary*)userInfo
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:moviePlayer];
     moviePlayer.scalingMode = imageScrollView.zoomScale > imageScrollView.minimumZoomScale ? MPMovieScalingModeAspectFill : UIViewContentModeScaleAspectFit;
     imageScrollView.zoomScale = moviePlayer.scalingMode == MPMovieScalingModeAspectFit ? imageScrollView.minimumZoomScale:imageScrollView.maximumZoomScale;
     
     [moviePlayer.view removeFromSuperview];
     moviePlayer = nil;
     
-    if ([self.delegate respondsToSelector:@selector(playbackFinished)]){
-        [self.delegate playbackFinished];
+    if ([self.delegate respondsToSelector:@selector(playbackFinished:)]){
+        [self.delegate playbackFinished:self];
     }
 }
 
@@ -229,8 +230,8 @@ static UIImage* playButtonImage()
 -(void)play
 {
     // hideBars if need
-    if ([self.delegate respondsToSelector:@selector(playButtonPressed)]){
-        [self.delegate playButtonPressed];
+    if ([self.delegate respondsToSelector:@selector(playButtonPressed:)]){
+        [self.delegate playButtonPressed:self];
     }
 
     assert(_asset.isVideo);

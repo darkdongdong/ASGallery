@@ -73,6 +73,9 @@
     BOOL    callDidChangedFirstly;
     BOOL    viewVisibleNow;
 }
+
+@property (nonatomic, weak) ASGalleryPage *currentPlayingVideoPage;
+
 @end
 
 @implementation ASGalleryViewController
@@ -317,9 +320,13 @@
     page.imageType = imageType;
 }
 
+-(void)stopVideo
+{
+    [self.currentPlayingVideoPage stop];
+}
+
 -(void)reloadData
 {
-    [[self visiblePageForIndex:self.selectedIndex] stop];
     pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
     [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:YES];
 }
@@ -458,17 +465,19 @@
     return [self visiblePageForIndex:self.selectedIndex].imageView;
 }
 
--(void)playButtonPressed
+-(void)playButtonPressed:(ASGalleryPage *)page
 {
     pagingScrollView.scrollEnabled = NO;
     playBackStarted = YES;
+    self.currentPlayingVideoPage = page;
     [self hideBars];
 }
 
--(void)playbackFinished
+-(void)playbackFinished:(ASGalleryPage *)page
 {
     pagingScrollView.scrollEnabled = YES;
     playBackStarted = NO;
+    self.currentPlayingVideoPage = nil;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 
 }
