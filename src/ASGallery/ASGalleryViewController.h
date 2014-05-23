@@ -93,7 +93,6 @@ typedef void (^ASImageSetBlock)(ASGalleryImageType type, UIImage* image);
 
 @property(nonatomic,strong) ASImageScrollView* currentImageView;
 
-@property (nonatomic) BOOL doNotHideBars;
 @property (nonatomic,assign) BOOL doNotHideBarsOnScrollBegin;
 
 -(void)stopVideo;
