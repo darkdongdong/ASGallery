@@ -80,13 +80,17 @@
 
 @implementation ASGalleryViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+-(void)scrollToIndex:(NSUInteger)index
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+    pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
+
+    CGFloat pageWidth = pagingScrollView.frame.size.width;
+    CGFloat newOffset = index * pageWidth;
+    pagingScrollView.contentOffset = CGPointMake(newOffset, 0);
+
+    [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:YES];
+
+    [self resetTimeout];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation

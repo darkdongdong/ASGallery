@@ -84,7 +84,7 @@ typedef void (^ASImageSetBlock)(ASGalleryImageType type, UIImage* image);
 @property (nonatomic,strong)     NSMutableSet    *visiblePages;
 
 
-@property(nonatomic,assign) NSUInteger selectedIndex;
+@property(nonatomic) NSUInteger selectedIndex;
 
 @property(nonatomic,assign) NSUInteger fullScreenImagesToPreload;   // +- 1 by default
 @property(nonatomic,assign) NSUInteger previewImagesToPreload;      // +- 5 by default
@@ -97,6 +97,8 @@ typedef void (^ASImageSetBlock)(ASGalleryImageType type, UIImage* image);
 
 -(void)stopVideo;
 -(void)reloadData;
+
+-(void)scrollToIndex:(NSUInteger)index;
 
 - (ASGalleryPage*)visiblePageForIndex:(NSUInteger)index;
 
