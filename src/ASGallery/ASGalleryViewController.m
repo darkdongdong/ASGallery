@@ -497,8 +497,25 @@
     }
 }
 
+-(void)setDoNotHideBars:(BOOL)doNotHideBars
+{
+    if ( _doNotHideBars != doNotHideBars )
+    {
+        if ( _doNotHideBars && !doNotHideBars )
+        {
+            [self resetTimeout];
+        }
+        _doNotHideBars = doNotHideBars;
+    }
+}
+
 -(void)hideBars
 {
+    if ( self.doNotHideBars )
+    {
+        return;
+    }
+
     [hideBarsTimer invalidate];
     hideBarsTimer = nil;
  
