@@ -63,6 +63,8 @@
 {
     if (_url == nil)
         _url = [[_asset defaultRepresentation] url];
+    if ( !_url )
+        _url = [[_asset valueForProperty:ALAssetPropertyURLs] allObjects].lastObject;
     return _url;
 }
 
@@ -75,26 +77,32 @@
 
 -(UIImage*)imageForType:(ASGalleryImageType)imageType
 {
+    UIImage *image;
     switch (imageType) {
         case ASGalleryImageThumbnail:
-            return [UIImage imageWithCGImage:[self.asset thumbnail]];
-            
+            image =  [UIImage imageWithCGImage:[self.asset thumbnail]];
+            break;
         case ASGalleryImagePreview:
-            return [UIImage imageWithCGImage:[self.asset aspectRatioThumbnail]];
-            
+            image = [UIImage imageWithCGImage:[self.asset aspectRatioThumbnail]];
+            break;
         case ASGalleryImageFullScreen:
-            return [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
-            
+            image = [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
+            break;
         case ASGalleryImageFullResolution:
         {
             ALAssetRepresentation* defaultRepresentation = [self.asset defaultRepresentation];
-            return [UIImage imageWithCGImage:[defaultRepresentation fullResolutionImage]
-                                       scale:defaultRepresentation.scale
-                                 orientation:(UIImageOrientation)defaultRepresentation.orientation];
+            image = [UIImage imageWithCGImage:[defaultRepresentation fullResolutionImage]
+                                        scale:defaultRepresentation.scale
+                                  orientation:(UIImageOrientation)defaultRepresentation.orientation];
+            break;
         }
         default:
-            return nil;
+            break;
     }
+    if ( !image && ASGalleryImageThumbnail != imageType){
+        return [self imageForType:ASGalleryImageThumbnail];
+    }
+    return image;
 }
 
 @end
