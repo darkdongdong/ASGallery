@@ -88,7 +88,24 @@
         case ASGalleryImageFullResolution:
         {
             ALAssetRepresentation* defaultRepresentation = [self.asset defaultRepresentation];
-            return [UIImage imageWithCGImage:[defaultRepresentation fullResolutionImage]
+            CGImageRef fullResolutionImage = [defaultRepresentation fullResolutionImage];
+            NSString *adjustmentXMP = [[defaultRepresentation metadata] objectForKey:@"AdjustmentXMP"];
+            if (adjustmentXMP && [CIFilter respondsToSelector:@selector(filterArrayFromSerializedXMP:inputImageExtent:error:)]) {
+                CIImage *image = [CIImage imageWithCGImage:fullResolutionImage];
+                NSError *error = nil;
+                NSArray *filterArray = [CIFilter filterArrayFromSerializedXMP:[adjustmentXMP dataUsingEncoding:NSUTF8StringEncoding]
+                                                             inputImageExtent:image.extent
+                                                                        error:&error];
+                if (filterArray && !error) {
+                    CIContext *context = [CIContext contextWithOptions:nil];
+                    for (CIFilter *filter in filterArray) {
+                        [filter setValue:image forKey:kCIInputImageKey];
+                        image = [filter outputImage];
+                    }
+                    fullResolutionImage = [context createCGImage:image fromRect:[image extent]];
+                }
+            }
+            return [UIImage imageWithCGImage:fullResolutionImage
                                        scale:defaultRepresentation.scale
                                  orientation:(UIImageOrientation)defaultRepresentation.orientation];
         }
