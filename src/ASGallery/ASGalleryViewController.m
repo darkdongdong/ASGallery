@@ -44,8 +44,12 @@
     [super layoutSubviews];
     
     CGRect rect = [UIScreen mainScreen].bounds;
-    CGFloat height = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? rect.size.height : rect.size.width;
-    
+    CGFloat height = rect.size.height;
+
+    int osVersion = [[[[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."] objectAtIndex:0] intValue];
+    if (osVersion < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+        height = rect.size.width;
+
     CGRect frame = self.shiftView.frame;
     frame.origin.y = self.frame.size.height - height;
     frame.size.height = height;
@@ -173,8 +177,9 @@
 
 - (CGRect)frameForPagingScrollView {
     CGRect frame = [[UIScreen mainScreen] bounds];
-    
-    if (!UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+
+    int osVersion = [[[[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."] objectAtIndex:0] intValue];
+    if (osVersion < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
         frame.size = CGSizeMake(frame.size.height,frame.size.width);
     frame.origin.x -= PADDING;
     frame.size.width += (2 * PADDING);
@@ -216,7 +221,8 @@
     pagingScrollView.delegate = self;
     
     CGRect frameForParentView = [[UIScreen mainScreen] bounds];
-    if (!UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+    int osVersion = [[[[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."] objectAtIndex:0] intValue];
+    if (osVersion < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
         frameForParentView.size = CGSizeMake(frameForParentView.size.height,frameForParentView.size.width);
     
     ShiftContentView* shiftContentView = [[ShiftContentView alloc] initWithFrame:frameForParentView];
