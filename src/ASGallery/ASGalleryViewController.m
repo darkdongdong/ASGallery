@@ -30,6 +30,15 @@
 #define PADDING  20
 #define SHOW_HIDE_ANIMATION_TIME 0.35
 
+NS_INLINE NSUInteger iOSVersion() {
+    NSUInteger version = 6;
+    NSArray *components = [[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."];
+    if ( [components count] ) {
+        version = [components[0] intValue];
+    }
+    return version;
+}
+
 @interface ShiftContentView : UIView
 
 @property (nonatomic,assign) UIInterfaceOrientation interfaceOrientation;
@@ -46,8 +55,7 @@
     CGRect rect = [UIScreen mainScreen].bounds;
     CGFloat height = rect.size.height;
 
-    int osVersion = [[[[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."] objectAtIndex:0] intValue];
-    if (osVersion < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+    if (iOSVersion() < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
         height = rect.size.width;
 
     CGRect frame = self.shiftView.frame;
@@ -178,8 +186,7 @@
 - (CGRect)frameForPagingScrollView {
     CGRect frame = [[UIScreen mainScreen] bounds];
 
-    int osVersion = [[[[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."] objectAtIndex:0] intValue];
-    if (osVersion < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+    if (iOSVersion() < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
         frame.size = CGSizeMake(frame.size.height,frame.size.width);
     frame.origin.x -= PADDING;
     frame.size.width += (2 * PADDING);
@@ -221,8 +228,7 @@
     pagingScrollView.delegate = self;
     
     CGRect frameForParentView = [[UIScreen mainScreen] bounds];
-    int osVersion = [[[[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."] objectAtIndex:0] intValue];
-    if (osVersion < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+    if (iOSVersion() < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
         frameForParentView.size = CGSizeMake(frameForParentView.size.height,frameForParentView.size.width);
     
     ShiftContentView* shiftContentView = [[ShiftContentView alloc] initWithFrame:frameForParentView];
