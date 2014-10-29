@@ -509,6 +509,10 @@ NS_INLINE NSUInteger iOSVersion() {
     }
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return hideControls;
+}
+
 -(void)hideBars
 {
     [hideBarsTimer invalidate];
@@ -519,9 +523,13 @@ NS_INLINE NSUInteger iOSVersion() {
     
     if (!hideControls) {
         hideControls = YES;
-        
-        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-        
+
+        if ( iOSVersion() < 7) {
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+        } else {
+            [self setNeedsStatusBarAppearanceUpdate];
+        }
+
         __unsafe_unretained ASGalleryViewController* SELF = self;
         
         if ([SELF.delegate respondsToSelector:@selector(menuBarsWillDisappearInGalleryController:)])
@@ -556,8 +564,12 @@ NS_INLINE NSUInteger iOSVersion() {
     if (hideControls) {
         hideControls = NO;
 
-        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-        
+        if ( iOSVersion() < 7) {
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+        } else {
+            [self setNeedsStatusBarAppearanceUpdate];
+        }
+
         [self.navigationController setNavigationBarHidden:NO  animated:NO];
         pagingScrollView.frame = [self frameForPagingScrollView];
         
