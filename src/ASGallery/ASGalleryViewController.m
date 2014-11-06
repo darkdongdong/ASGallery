@@ -494,8 +494,7 @@ NS_INLINE NSUInteger iOSVersion() {
     pagingScrollView.scrollEnabled = YES;
     playBackStarted = NO;
     self.currentPlayingVideoPage = nil;
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-
+    [self showBars];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
