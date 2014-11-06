@@ -565,7 +565,7 @@ NS_INLINE NSUInteger iOSVersion() {
         hideControls = NO;
 
         if ( iOSVersion() < 7) {
-            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
         } else {
             [self setNeedsStatusBarAppearanceUpdate];
         }
