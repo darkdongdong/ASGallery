@@ -529,6 +529,9 @@ NS_INLINE NSUInteger iOSVersion() {
             [self setNeedsStatusBarAppearanceUpdate];
         }
 
+        [self.navigationController setNavigationBarHidden:YES animated:NO];
+        pagingScrollView.frame = [self frameForPagingScrollView];
+
         __unsafe_unretained ASGalleryViewController* SELF = self;
         
         if ([SELF.delegate respondsToSelector:@selector(menuBarsWillDisappearInGalleryController:)])
@@ -536,8 +539,6 @@ NS_INLINE NSUInteger iOSVersion() {
         [self.visiblePages makeObjectsPerformSelector:@selector(menuBarsWillDisappear)];
         
         [UIView animateWithDuration:SHOW_HIDE_ANIMATION_TIME animations:^{
-            
-            SELF.navigationController.navigationBar.alpha = 0.0;
             if ([SELF.delegate respondsToSelector:@selector(galleryController:willAnimateMenuBarsDisappearWithDuration:)])
                 [SELF.delegate galleryController:self willAnimateMenuBarsDisappearWithDuration:SHOW_HIDE_ANIMATION_TIME];
             
@@ -546,9 +547,6 @@ NS_INLINE NSUInteger iOSVersion() {
             }];
             
         }completion:^(BOOL finished) {
-            
-            [self.navigationController setNavigationBarHidden:YES animated:NO];
-            pagingScrollView.frame = [self frameForPagingScrollView];
 
             if ([SELF.delegate respondsToSelector:@selector(menuBarsDidDisappearInGalleryController:)])
                 [SELF.delegate menuBarsDidDisappearInGalleryController:self];
