@@ -211,6 +211,10 @@
     }
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self layoutSubviews];
+}
 
 - (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center
 {
