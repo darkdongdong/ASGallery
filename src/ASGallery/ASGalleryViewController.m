@@ -525,34 +525,36 @@ NS_INLINE NSUInteger iOSVersion() {
 
         if ( iOSVersion() < 7) {
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+            [self.navigationController setNavigationBarHidden:YES animated:YES];
+            pagingScrollView.frame = [self frameForPagingScrollView];
         } else {
+            [self.navigationController setNavigationBarHidden:YES animated:YES];
             [self setNeedsStatusBarAppearanceUpdate];
         }
 
-        [self.navigationController setNavigationBarHidden:YES animated:NO];
-        pagingScrollView.frame = [self frameForPagingScrollView];
-
         __unsafe_unretained ASGalleryViewController* SELF = self;
-        
+
         if ([SELF.delegate respondsToSelector:@selector(menuBarsWillDisappearInGalleryController:)])
             [SELF.delegate menuBarsWillDisappearInGalleryController:self];
+
         [self.visiblePages makeObjectsPerformSelector:@selector(menuBarsWillDisappear)];
-        
-        [UIView animateWithDuration:SHOW_HIDE_ANIMATION_TIME animations:^{
+
+        [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{
+
             if ([SELF.delegate respondsToSelector:@selector(galleryController:willAnimateMenuBarsDisappearWithDuration:)])
-                [SELF.delegate galleryController:self willAnimateMenuBarsDisappearWithDuration:SHOW_HIDE_ANIMATION_TIME];
-            
+                [SELF.delegate galleryController:self willAnimateMenuBarsDisappearWithDuration:UINavigationControllerHideShowBarDuration];
+
             [self.visiblePages enumerateObjectsUsingBlock:^(ASGalleryPage* page, BOOL *stop) {
-                [page willAnimateMenuBarsDisappearWithDuration:SHOW_HIDE_ANIMATION_TIME];
+                [page willAnimateMenuBarsDisappearWithDuration:UINavigationControllerHideShowBarDuration];
             }];
-            
+
         }completion:^(BOOL finished) {
 
             if ([SELF.delegate respondsToSelector:@selector(menuBarsDidDisappearInGalleryController:)])
                 [SELF.delegate menuBarsDidDisappearInGalleryController:self];
+
             [self.visiblePages makeObjectsPerformSelector:@selector(menuBarsDidDisappear)];
         }];
-        
     }
 }
 
@@ -562,34 +564,35 @@ NS_INLINE NSUInteger iOSVersion() {
         hideControls = NO;
 
         if ( iOSVersion() < 7) {
-            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+            [self.navigationController setNavigationBarHidden:NO animated:NO];
+            pagingScrollView.frame = [self frameForPagingScrollView];
         } else {
+            [self.navigationController setNavigationBarHidden:NO animated:NO];
             [self setNeedsStatusBarAppearanceUpdate];
         }
 
-        [self.navigationController setNavigationBarHidden:NO  animated:NO];
-        pagingScrollView.frame = [self frameForPagingScrollView];
-        
         __unsafe_unretained ASGalleryViewController* SELF = self;
-        
+
         if ([SELF.delegate respondsToSelector:@selector(menuBarsWillAppearInGalleryController:)])
             [SELF.delegate menuBarsWillAppearInGalleryController:self];
+
         [self.visiblePages makeObjectsPerformSelector:@selector(menuBarsWillAppear)];
 
-        [UIView animateWithDuration:SHOW_HIDE_ANIMATION_TIME animations:^{
-            
-            SELF.navigationController.navigationBar.alpha = 1.0;
+        [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{
+
             if ([SELF.delegate respondsToSelector:@selector(galleryController:willAnimateMenuBarsAppearWithDuration:)])
-                [SELF.delegate galleryController:self willAnimateMenuBarsAppearWithDuration:SHOW_HIDE_ANIMATION_TIME];
-            
+                [SELF.delegate galleryController:self willAnimateMenuBarsAppearWithDuration:UINavigationControllerHideShowBarDuration];
+
             [self.visiblePages enumerateObjectsUsingBlock:^(ASGalleryPage* page, BOOL *stop) {
-                [page willAnimateMenuBarsAppearWithDuration:SHOW_HIDE_ANIMATION_TIME];
+                [page willAnimateMenuBarsAppearWithDuration:UINavigationControllerHideShowBarDuration];
             }];
-            
+
         }completion:^(BOOL finished) {
-            
+
             if ([SELF.delegate respondsToSelector:@selector(menuBarsDidAppearInGalleryController:)])
                 [SELF.delegate menuBarsDidAppearInGalleryController:self];
+
             [self.visiblePages makeObjectsPerformSelector:@selector(menuBarsDidAppear)];
         }];
     }
