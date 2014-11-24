@@ -66,6 +66,16 @@ NS_INLINE NSUInteger iOSVersion() {
 
 @end
 
+@interface CancellationToken : NSObject
+
+@property (atomic) BOOL isCancelled;
+
+@end
+
+@implementation CancellationToken
+
+@end
+
 @interface ASGalleryViewController ()<UIScrollViewDelegate,UIGestureRecognizerDelegate,ASGalleryPageDelegate>{
     UIScrollView    *pagingScrollView;
     NSMutableSet    *recycledPages;
@@ -77,8 +87,8 @@ NS_INLINE NSUInteger iOSVersion() {
     BOOL    processingRotationNow;
     BOOL    playBackStarted;
     BOOL    hideControls;
-    NSTimer* hideBarsTimer;
-    
+    CancellationToken* hideBarsToken;
+
     UITapGestureRecognizer* gestureSingleTap;
     UITapGestureRecognizer* gestureDoubleTap;
     
@@ -277,7 +287,7 @@ NS_INLINE NSUInteger iOSVersion() {
 {
     viewVisibleNow = NO;
     [super viewWillDisappear:animated];
-    [hideBarsTimer invalidate];
+    hideBarsToken.isCancelled = YES;
     [self showBars];
 }
 
@@ -514,9 +524,9 @@ NS_INLINE NSUInteger iOSVersion() {
 
 -(void)hideBars
 {
-    [hideBarsTimer invalidate];
-    hideBarsTimer = nil;
- 
+    hideBarsToken.isCancelled = YES;
+    hideBarsToken = nil;
+
     if (!viewVisibleNow)
         return;
     
@@ -600,8 +610,15 @@ NS_INLINE NSUInteger iOSVersion() {
 
 -(void)resetTimeout
 {
-    [hideBarsTimer invalidate];
-    hideBarsTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(hideBars) userInfo:nil repeats:NO];
+    CancellationToken *token = [CancellationToken new];
+    hideBarsToken.isCancelled = YES;
+    hideBarsToken = token;
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+        if ( !token.isCancelled ) {
+            [weakSelf hideBars];
+        }
+    });
 }
 
 -(void)singleTap:(UITapGestureRecognizer *)gestureRecognizer
