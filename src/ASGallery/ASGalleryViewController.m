@@ -288,6 +288,7 @@ NS_INLINE NSUInteger iOSVersion() {
     viewVisibleNow = NO;
     [super viewWillDisappear:animated];
     hideBarsToken.isCancelled = YES;
+    [self stopVideo];
     [self showBars];
 }
 
