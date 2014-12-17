@@ -43,10 +43,40 @@
 
 @property (nonatomic,strong) NSMutableOrderedSet* orderedSet;
 @property (nonatomic,strong) NSMutableDictionary* dic;
+@property (nonatomic,strong) id observationInfo;
 
 @end
 
 @implementation ASCache
+
+-(id)init
+{
+    if (self = [super init]) {
+        __weak __typeof(self) weakSelf = self;
+        _observationInfo = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification
+                                                                             object:nil
+                                                                              queue:nil
+                                                                         usingBlock:^(NSNotification *note) {
+                                                                             __typeof(self) strongSelf = weakSelf;
+                                                                             if (strongSelf) {
+                                                                                 [strongSelf removeAllObjects];
+                                                                             }
+                                                                         }];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    if ([NSThread isMainThread]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:_observationInfo];
+    } else {
+        id blockObservationInfo = _observationInfo;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] removeObserver:blockObservationInfo];
+        });
+    }
+}
 
 -(NSMutableOrderedSet*)orderedSet
 {
