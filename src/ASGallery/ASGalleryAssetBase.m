@@ -19,7 +19,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         cache = [[ASCache alloc] init];
-        cache.maxCachedObjectsCount = 5;
+        cache.maxCachedObjectsCount = 128;
     });
     return cache;
 }
