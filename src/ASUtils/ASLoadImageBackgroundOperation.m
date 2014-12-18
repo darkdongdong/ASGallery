@@ -50,31 +50,18 @@
 {
     if ([self isCancelled])
         return;
-    
-    @synchronized(self){
-        if (self.imageFetchBlock)
-            image = self.imageFetchBlock();
-    }
+
+    if (self.imageFetchBlock)
+        image = self.imageFetchBlock();
 }
 
 -(void)completeLoadImage
 {
     if ([self isCancelled])
         return;
-    
-    @synchronized(self){
-        if (self.imageSetBlock)
-            self.imageSetBlock(image);
-    }
-}
 
--(void)cancel
-{
-    @synchronized(self){
-        self.imageSetBlock = nil;
-        self.imageFetchBlock = nil;
-    }
-    [super cancel];
+    if (self.imageSetBlock)
+        self.imageSetBlock(image);
 }
 
 @end
