@@ -96,19 +96,18 @@
     
     if (_imageView == nil) {
         // make a new UIImageView for the new image
-        _imageView = [[UIImageView alloc] initWithImage:image];
-        
+        _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
 //        _imageView.autoresizesSubviews = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_imageView];
-        
-        self.contentSize = [image size];
+
         [self setMaxMinZoomScalesForCurrentBounds];
         self.zoomScale = self.minimumZoomScale;
 
-    }else{
-        _imageView.image = image;
     }
+
+    _imageView.image = image;
 }
 
 - (void)setMaxMinZoomScalesForCurrentBounds
