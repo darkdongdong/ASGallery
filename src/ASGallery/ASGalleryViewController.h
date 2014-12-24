@@ -48,6 +48,7 @@ typedef void (^ASImageSetBlock)(ASGalleryImageType type, UIImage* image);
 -(BOOL)isVideo;
 -(NSOperation*)loadImage:(id<ASGalleryImageView>)galleryImageView withImageType:(ASGalleryImageType)imageType;
 -(NSURL*)url;
+- (CGSize)dimensions;
 @end
 
 

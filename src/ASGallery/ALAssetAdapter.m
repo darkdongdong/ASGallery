@@ -30,6 +30,7 @@
 @interface ALAssetAdapter (){
     NSString* type;
     NSURL* _url;
+    CGSize _dimensions;
     NSNumber* _duration;
 }
 
@@ -64,6 +65,13 @@
     if (_url == nil)
         _url = [[_asset defaultRepresentation] url];
     return _url;
+}
+
+-(CGSize)dimensions
+{
+    if (CGSizeEqualToSize(_dimensions, CGSizeZero))
+        _dimensions = [[_asset defaultRepresentation] dimensions];
+    return _dimensions;
 }
 
 -(BOOL)isImageForTypeAvailable:(ASGalleryImageType)imageType

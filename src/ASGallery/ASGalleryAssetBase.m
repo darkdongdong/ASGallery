@@ -83,6 +83,12 @@
     return nil;
 }
 
+-(CGSize)dimensions
+{
+    assert(!"override me");
+    return CGSizeZero;
+}
+
 -(BOOL)isVideo
 {
     assert(!"override me");
