@@ -25,43 +25,29 @@
 // THE SOFTWARE.
 
 #import "ASLoadImageBackgroundOperation.h"
-#import "NSOperation+AS.h"
-
-@interface ASLoadImageBackgroundOperation (){
-    UIImage* image;
-}
-
-@end
 
 @implementation ASLoadImageBackgroundOperation
-
-
--(id)init
-{
-    self = [super init];
-    if (self)
-    {
-        [self addCompletion:[NSOperationCompletion completionWithTarget:self selector:@selector(completeLoadImage) onThread:[NSThread currentThread]]];
-    }
-    return self;
-}
 
 -(void)main
 {
     if ([self isCancelled])
         return;
 
+    UIImage *image = nil;
     if (self.imageFetchBlock)
         image = self.imageFetchBlock();
-}
 
--(void)completeLoadImage
-{
-    if ([self isCancelled])
-        return;
+    __weak __typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong __typeof(self) strongSelf = weakSelf;
+        if (strongSelf) {
+            if ([strongSelf isCancelled])
+                return;
 
-    if (self.imageSetBlock)
-        self.imageSetBlock(image);
+            if (strongSelf.imageSetBlock)
+                strongSelf.imageSetBlock(image);
+        }
+    });
 }
 
 @end
