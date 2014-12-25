@@ -110,12 +110,12 @@
     
     ASLoadImageBackgroundOperation* loadImageOperation = [[ASLoadImageBackgroundOperation alloc] init];
     loadImageOperation.queuePriority = NSOperationQueuePriorityVeryLow;
-    __unsafe_unretained ASGalleryAssetBase* SELF = self;
+    __weak typeof(self) weakSelf = self;
     loadImageOperation.imageFetchBlock = ^UIImage*(void){
-        
-        UIImage* image = [SELF imageForType:imageType];
+
+        UIImage* image = [weakSelf imageForType:imageType];
         if (image) {
-            [SELF setImageCache:image forType:imageType];
+            [weakSelf setImageCache:image forType:imageType];
         }
         return image;
     };

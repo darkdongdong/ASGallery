@@ -543,17 +543,16 @@ NS_INLINE NSUInteger iOSVersion() {
             [self setNeedsStatusBarAppearanceUpdate];
         }
 
-        __unsafe_unretained ASGalleryViewController* SELF = self;
-
-        if ([SELF.delegate respondsToSelector:@selector(menuBarsWillDisappearInGalleryController:)])
-            [SELF.delegate menuBarsWillDisappearInGalleryController:self];
+        if ([self.delegate respondsToSelector:@selector(menuBarsWillDisappearInGalleryController:)])
+            [self.delegate menuBarsWillDisappearInGalleryController:self];
 
         [self.visiblePages makeObjectsPerformSelector:@selector(menuBarsWillDisappear)];
 
+        __weak typeof(self) weakSelf = self;
         [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{
 
-            if ([SELF.delegate respondsToSelector:@selector(galleryController:willAnimateMenuBarsDisappearWithDuration:)])
-                [SELF.delegate galleryController:self willAnimateMenuBarsDisappearWithDuration:UINavigationControllerHideShowBarDuration];
+            if ([weakSelf.delegate respondsToSelector:@selector(galleryController:willAnimateMenuBarsDisappearWithDuration:)])
+                [weakSelf.delegate galleryController:self willAnimateMenuBarsDisappearWithDuration:UINavigationControllerHideShowBarDuration];
 
             [self.visiblePages enumerateObjectsUsingBlock:^(ASGalleryPage* page, BOOL *stop) {
                 [page willAnimateMenuBarsDisappearWithDuration:UINavigationControllerHideShowBarDuration];
@@ -561,8 +560,8 @@ NS_INLINE NSUInteger iOSVersion() {
 
         }completion:^(BOOL finished) {
 
-            if ([SELF.delegate respondsToSelector:@selector(menuBarsDidDisappearInGalleryController:)])
-                [SELF.delegate menuBarsDidDisappearInGalleryController:self];
+            if ([weakSelf.delegate respondsToSelector:@selector(menuBarsDidDisappearInGalleryController:)])
+                [weakSelf.delegate menuBarsDidDisappearInGalleryController:self];
 
             [self.visiblePages makeObjectsPerformSelector:@selector(menuBarsDidDisappear)];
         }];
@@ -583,17 +582,16 @@ NS_INLINE NSUInteger iOSVersion() {
             [self setNeedsStatusBarAppearanceUpdate];
         }
 
-        __unsafe_unretained ASGalleryViewController* SELF = self;
-
-        if ([SELF.delegate respondsToSelector:@selector(menuBarsWillAppearInGalleryController:)])
-            [SELF.delegate menuBarsWillAppearInGalleryController:self];
+        if ([self.delegate respondsToSelector:@selector(menuBarsWillAppearInGalleryController:)])
+            [self.delegate menuBarsWillAppearInGalleryController:self];
 
         [self.visiblePages makeObjectsPerformSelector:@selector(menuBarsWillAppear)];
 
+        __weak typeof(self) weakSelf = self;
         [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{
 
-            if ([SELF.delegate respondsToSelector:@selector(galleryController:willAnimateMenuBarsAppearWithDuration:)])
-                [SELF.delegate galleryController:self willAnimateMenuBarsAppearWithDuration:UINavigationControllerHideShowBarDuration];
+            if ([weakSelf.delegate respondsToSelector:@selector(galleryController:willAnimateMenuBarsAppearWithDuration:)])
+                [weakSelf.delegate galleryController:self willAnimateMenuBarsAppearWithDuration:UINavigationControllerHideShowBarDuration];
 
             [self.visiblePages enumerateObjectsUsingBlock:^(ASGalleryPage* page, BOOL *stop) {
                 [page willAnimateMenuBarsAppearWithDuration:UINavigationControllerHideShowBarDuration];
@@ -601,8 +599,8 @@ NS_INLINE NSUInteger iOSVersion() {
 
         }completion:^(BOOL finished) {
 
-            if ([SELF.delegate respondsToSelector:@selector(menuBarsDidAppearInGalleryController:)])
-                [SELF.delegate menuBarsDidAppearInGalleryController:self];
+            if ([weakSelf.delegate respondsToSelector:@selector(menuBarsDidAppearInGalleryController:)])
+                [weakSelf.delegate menuBarsDidAppearInGalleryController:self];
 
             [self.visiblePages makeObjectsPerformSelector:@selector(menuBarsDidAppear)];
         }];
