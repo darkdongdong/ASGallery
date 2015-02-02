@@ -45,6 +45,7 @@
         [self setExtendedLayoutIncludesOpaqueBars:YES];
     }
     [self setWantsFullScreenLayout:YES];
+    [_galleryView viewDidLoad];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -69,10 +70,6 @@
     return self.assets[index];
 }
 
--(void)selectedIndexDidChangedInGalleryView:(ASGalleryView*)view;
-{
-    
-}
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
@@ -83,4 +80,20 @@
 {
     [_galleryView willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
+
+- (void)galleryViewDidChangedPage:(ASImageScrollView *)imageView
+{
+    NSLog(@"galleryViewDidChangedPage");
+}
+
+- (void)galleryViewDidTappedSingle:(ASImageScrollView *)imageView
+{
+    NSLog(@"galleryViewDidTappedSingle");
+}
+
+- (void)galleryViewDidTappedDouble:(ASImageScrollView *)imageView
+{
+    NSLog(@"galleryViewDidTappedDouble");
+}
+
 @end

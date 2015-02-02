@@ -50,19 +50,18 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self initViews];
+//        [self initViews];
     }
     return self;
 }
 
-- (void)initViews
+- (void)viewDidLoad
 {
     // Step 1: make the outer paging scroll view
     CGRect pagingScrollViewFrame = [self frameForPagingScrollView];
     
     pagingScrollView = [[UIScrollView alloc] initWithFrame:pagingScrollViewFrame];
     pagingScrollView.pagingEnabled = YES;
-    pagingScrollView.backgroundColor = [UIColor orangeColor];
     pagingScrollView.showsVerticalScrollIndicator = NO;
     pagingScrollView.showsHorizontalScrollIndicator = NO;
     pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
@@ -230,7 +229,6 @@
         
         page.tag = index;
         page.frame = [self frameForPageAtIndex:index];
-        [page setBackgroundColor:[UIColor redColor]];
 
         [pagingScrollView addSubview:page];
         [_visiblePages addObject:page];
@@ -281,8 +279,8 @@
         if (self.selectedIndex != firstVisiblePageIndex || callDidChangedFirstly){
             self.selectedIndex = firstVisiblePageIndex;
             callDidChangedFirstly = NO;
-            if ([self.delegate respondsToSelector:@selector(selectedIndexDidChangedInGalleryView:)])
-                [self.delegate selectedIndexDidChangedInGalleryView:self];
+            if ([self.delegate respondsToSelector:@selector(galleryViewDidChangedPage:)])
+                [self.delegate galleryViewDidChangedPage:[self currentImageView]];
         }
     }
     
@@ -382,6 +380,9 @@
 {
     ASGalleryPage* isv = [self visiblePageForIndex:self.selectedIndex];
     [isv doubleTap:gestureRecognizer];
+
+    if ([self.delegate respondsToSelector:@selector(galleryViewDidTappedDouble:)])
+        [self.delegate galleryViewDidTappedDouble:[self currentImageView]];
 }
 
 -(ASImageScrollView*)currentImageView
@@ -413,6 +414,8 @@
     if (playBackStarted)
         return; // Ignoring, because now PlayBackStarted
     
+    if ([self.delegate respondsToSelector:@selector(galleryViewDidTappedSingle:)])
+        [self.delegate galleryViewDidTappedSingle:[self currentImageView]];
 }
 
 @end

@@ -13,8 +13,8 @@
 @class ASGalleryView;
 @protocol ASGalleryViewDataSource <NSObject>
 
--(NSUInteger)numberOfAssetsInGalleryView:(ASGalleryView*)view;
--(id<ASGalleryAsset>)galleryView:(ASGalleryView*)view assetAtIndex:(NSUInteger)index;
+- (NSUInteger) numberOfAssetsInGalleryView:(ASGalleryView*)view;
+- (id<ASGalleryAsset>) galleryView:(ASGalleryView*)view assetAtIndex:(NSUInteger)index;
 
 @end
 
@@ -22,15 +22,9 @@
 
 @optional
 
--(void)selectedIndexDidChangedInGalleryView:(ASGalleryView*)view;
-
--(void)menuBarsWillAppearInGalleryView:(ASGalleryView*)view;
--(void)galleryView:(ASGalleryView*)view willAnimateMenuBarsAppearWithDuration:(CGFloat)duration;
--(void)menuBarsDidAppearInGalleryView:(ASGalleryView*)view;
-
--(void)menuBarsWillDisappearInGalleryView:(ASGalleryView*)view;
--(void)galleryView:(ASGalleryView*)view willAnimateMenuBarsDisappearWithDuration:(CGFloat)duration;
--(void)menuBarsDidDisappearInGalleryView:(ASGalleryView*)view;
+- (void) galleryViewDidChangedPage:(ASImageScrollView*)imageView;
+- (void) galleryViewDidTappedSingle:(ASImageScrollView*)imageView;
+- (void) galleryViewDidTappedDouble:(ASImageScrollView*)imageView;
 
 @end
 
@@ -62,6 +56,7 @@
 // can be ovveride, for create and preinit ASGalleryPage subclass. also you can use galleryPageClass only or together with this method
 - (ASGalleryPage*) createGalleryPage;
 
+- (void) viewDidLoad;
 - (void) viewWillAppear;
 - (void) viewWillDisappear;
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
