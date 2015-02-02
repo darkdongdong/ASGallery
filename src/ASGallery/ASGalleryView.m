@@ -12,14 +12,14 @@
 #define PADDING  20
 #define SHOW_HIDE_ANIMATION_TIME 0.35
 
-NS_INLINE NSUInteger iOSVersion() {
-    NSUInteger version = 6;
-    NSArray *components = [[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."];
-    if ( [components count] ) {
-        version = [components[0] intValue];
-    }
-    return version;
-}
+//NS_INLINE NSUInteger iOSVersion() {
+//    NSUInteger version = 6;
+//    NSArray *components = [[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."];
+//    if ( [components count] ) {
+//        version = [components[0] intValue];
+//    }
+//    return version;
+//}
 
 @interface ASGalleryView ()<UIScrollViewDelegate,UIGestureRecognizerDelegate,ASGalleryPageDelegate>{
     UIScrollView    *pagingScrollView;
