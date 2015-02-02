@@ -1,6 +1,7 @@
 //
 //  TGCache.m
 //
+//
 //  Created by Andrey Syvrachev on 12.11.12. andreyalright@gmail.com
 //  Copyright (c) 2012 Andrey Syvrachev. All rights reserved.
 //
