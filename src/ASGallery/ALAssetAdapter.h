@@ -1,5 +1,5 @@
 //
-//  ALAssetAdapter.h
+//  ALAssetAdapter.h dddd
 //
 //  Created by Andrey Syvrachev on 21.05.13. andreyalright@gmail.com
 //  Copyright (c) 2013 Andrey Syvrachev. All rights reserved.
