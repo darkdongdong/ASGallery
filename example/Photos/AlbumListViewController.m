@@ -10,6 +10,8 @@
 #import "ASAssetsLibrary.h"
 #import "GalleryViewController.h"
 #import "ALAssetAdapter.h"
+#import <Photos/Photos.h>
+#import "PHAssetAdapter.h"
 
 @interface AlbumListViewController ()
 
@@ -108,10 +110,6 @@
         }
             
     }];
-    
-    
-    
-
     
 }
 

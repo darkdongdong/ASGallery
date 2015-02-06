@@ -35,6 +35,8 @@
 		10FC440517A14A9E00480171 /* ASGalleryAssetBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FC440417A14A9E00480171 /* ASGalleryAssetBase.m */; };
 		B52912E21A7F666200D980E8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52912E11A7F666200D980E8 /* CoreImage.framework */; };
 		B52912E51A7F708000D980E8 /* ASGalleryView.m in Sources */ = {isa = PBXBuildFile; fileRef = B52912E41A7F708000D980E8 /* ASGalleryView.m */; };
+		B529B1521A839B7C003B1AD9 /* PHAssetAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = B529B1511A839B7C003B1AD9 /* PHAssetAdapter.m */; };
+		B529B1541A83A538003B1AD9 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B529B1531A83A538003B1AD9 /* Photos.framework */; };
 		B57694C41A7F96A9000EFF55 /* ASGalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B57694C21A7F96A9000EFF55 /* ASGalleryViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -84,6 +86,9 @@
 		B52912E11A7F666200D980E8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		B52912E31A7F708000D980E8 /* ASGalleryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASGalleryView.h; sourceTree = "<group>"; };
 		B52912E41A7F708000D980E8 /* ASGalleryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASGalleryView.m; sourceTree = "<group>"; };
+		B529B1501A839B7C003B1AD9 /* PHAssetAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAssetAdapter.h; sourceTree = "<group>"; };
+		B529B1511A839B7C003B1AD9 /* PHAssetAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHAssetAdapter.m; sourceTree = "<group>"; };
+		B529B1531A83A538003B1AD9 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		B57694C21A7F96A9000EFF55 /* ASGalleryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASGalleryViewController.m; sourceTree = "<group>"; };
 		B57694C31A7F96A9000EFF55 /* ASGalleryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASGalleryViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B529B1541A83A538003B1AD9 /* Photos.framework in Frameworks */,
 				B52912E21A7F666200D980E8 /* CoreImage.framework in Frameworks */,
 				102CAC8F174B6C52007B75BE /* AssetsLibrary.framework in Frameworks */,
 				102CAC89174B6917007B75BE /* MediaPlayer.framework in Frameworks */,
@@ -126,6 +132,7 @@
 		102CAC4E174B6629007B75BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B529B1531A83A538003B1AD9 /* Photos.framework */,
 				B52912E11A7F666200D980E8 /* CoreImage.framework */,
 				102CAC8E174B6C52007B75BE /* AssetsLibrary.framework */,
 				102CAC88174B6917007B75BE /* MediaPlayer.framework */,
@@ -185,6 +192,8 @@
 				102CAC80174B68B6007B75BE /* playButton@2x.png */,
 				B52912E31A7F708000D980E8 /* ASGalleryView.h */,
 				B52912E41A7F708000D980E8 /* ASGalleryView.m */,
+				B529B1501A839B7C003B1AD9 /* PHAssetAdapter.h */,
+				B529B1511A839B7C003B1AD9 /* PHAssetAdapter.m */,
 			);
 			name = ASGallery;
 			path = ../../src/ASGallery;
@@ -300,6 +309,7 @@
 				102CAC77174B672F007B75BE /* AlbumListViewController.m in Sources */,
 				102CAC81174B68B6007B75BE /* ASGalleryPage.m in Sources */,
 				102CAC83174B68B6007B75BE /* ASImageScrollView.m in Sources */,
+				B529B1521A839B7C003B1AD9 /* PHAssetAdapter.m in Sources */,
 				102CAC8D174B6AEE007B75BE /* ASAssetsLibrary.m in Sources */,
 				10D0AFFC174B742800AEC2A1 /* GalleryViewController.m in Sources */,
 				10A3D5F9174B831A00013BE3 /* ASLoadImageBackgroundOperation.m in Sources */,

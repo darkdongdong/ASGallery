@@ -33,21 +33,31 @@
     if ([self isCancelled])
         return;
 
-    UIImage *image = nil;
-    if (self.imageFetchBlock)
-        image = self.imageFetchBlock();
+//    UIImage *image = nil;
+//    if (self.imageFetchBlock)
+//        image = self.imageFetchBlock();
+    
+    if (_asset != nil) {
+        
+        __weak ASGalleryAssetBase *weakAsset = _asset;
+        [_asset imageForType:_imageType completion:^(UIImage *image) {
+            if (image) {
+                [weakAsset setImageCache:image forType:_imageType];
+            }
+            __weak __typeof(self) weakSelf = self;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong __typeof(self) strongSelf = weakSelf;
+                if (strongSelf) {
+                    if ([strongSelf isCancelled])
+                        return;
+                    
+                    if (strongSelf.imageSetBlock)
+                        strongSelf.imageSetBlock(image);
+                }
+            });
+        }];
+    }
 
-    __weak __typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        __strong __typeof(self) strongSelf = weakSelf;
-        if (strongSelf) {
-            if ([strongSelf isCancelled])
-                return;
-
-            if (strongSelf.imageSetBlock)
-                strongSelf.imageSetBlock(image);
-        }
-    });
 }
 
 @end

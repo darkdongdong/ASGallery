@@ -26,6 +26,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import "ASGalleryAssetBase.h"
 
 typedef void (^TGImageSetBlock)(UIImage* image);
 typedef UIImage* (^TGImageFetchBlock)();
@@ -33,7 +34,9 @@ typedef UIImage* (^TGImageFetchBlock)();
 
 @interface ASLoadImageBackgroundOperation : NSOperation
 
-@property (nonatomic,copy) TGImageFetchBlock imageFetchBlock;
+//@property (nonatomic,copy) TGImageFetchBlock imageFetchBlock;
+@property (weak) ASGalleryAssetBase *asset;
+@property (assign) ASGalleryImageType imageType;
 @property (nonatomic,copy) TGImageSetBlock imageSetBlock;
 
 

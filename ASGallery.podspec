@@ -93,7 +93,7 @@ Pod::Spec.new do |s|
   #s.exclude_files = "src/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
-  s.ios.frameworks = 'UIKit', 'CoreGraphics'
+  s.ios.frameworks = 'UIKit', 'CoreGraphics', 'Photos'
 
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

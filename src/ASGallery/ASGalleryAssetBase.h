@@ -18,7 +18,8 @@
 
 @interface ASGalleryAssetBase : NSObject<ASGalleryAsset, ASGalleryAsyncImageProviding>
 
--(UIImage*)imageForType:(ASGalleryImageType)imageType;
+-(void)imageForType:(ASGalleryImageType)imageType completion:(void(^)(UIImage *image))completion;
+-(void)setImageCache:(UIImage*)image forType:(ASGalleryImageType)imageType;
 -(CGFloat)duration;
 
 @end

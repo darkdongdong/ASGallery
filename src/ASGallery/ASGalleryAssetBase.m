@@ -71,10 +71,10 @@
     return 0;
 }
 
--(UIImage*)imageForType:(ASGalleryImageType)imageType
+-(void)imageForType:(ASGalleryImageType)imageType completion:(void (^)(UIImage *))completion
 {
     assert(!"override me");
-    return nil;
+    completion(nil);
 }
 
 -(NSURL*)url
@@ -110,15 +110,8 @@
     
     ASLoadImageBackgroundOperation* loadImageOperation = [[ASLoadImageBackgroundOperation alloc] init];
     loadImageOperation.queuePriority = NSOperationQueuePriorityVeryLow;
-    __weak typeof(self) weakSelf = self;
-    loadImageOperation.imageFetchBlock = ^UIImage*(void){
-
-        UIImage* image = [weakSelf imageForType:imageType];
-        if (image) {
-            [weakSelf setImageCache:image forType:imageType];
-        }
-        return image;
-    };
+    loadImageOperation.asset = self;
+    loadImageOperation.imageType = imageType;
     
     loadImageOperation.imageSetBlock = ^(UIImage* image){
         [galleryImageView setImage:image];

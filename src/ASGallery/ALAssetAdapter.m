@@ -82,17 +82,20 @@
     return imageType != ASGalleryImagePreview;
 }
 
--(UIImage*)imageForType:(ASGalleryImageType)imageType
+-(void)imageForType:(ASGalleryImageType)imageType completion:(void(^)(UIImage*))completion
 {
     switch (imageType) {
         case ASGalleryImageThumbnail:
-            return [UIImage imageWithCGImage:[self.asset thumbnail]];
+            completion([UIImage imageWithCGImage:[self.asset thumbnail]]);
+            return;
             
         case ASGalleryImagePreview:
-            return [UIImage imageWithCGImage:[self.asset aspectRatioThumbnail]];
+            completion([UIImage imageWithCGImage:[self.asset aspectRatioThumbnail]]);
+            return;
             
         case ASGalleryImageFullScreen:
-            return [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
+            completion([UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]]);
+            return;
             
         case ASGalleryImageFullResolution:
         {
@@ -114,12 +117,14 @@
                     fullResolutionImage = [context createCGImage:image fromRect:[image extent]];
                 }
             }
-            return [UIImage imageWithCGImage:fullResolutionImage
+            completion ([UIImage imageWithCGImage:fullResolutionImage
                                        scale:defaultRepresentation.scale
-                                 orientation:(UIImageOrientation)defaultRepresentation.orientation];
+                                 orientation:(UIImageOrientation)defaultRepresentation.orientation]);
+            return;
         }
         default:
-            return nil;
+            completion(nil);
+            return;
     }
 }
 
