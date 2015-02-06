@@ -132,7 +132,8 @@
 }
 
 - (CGRect)frameForPagingScrollView {
-    CGRect frame = [[UIScreen mainScreen] bounds];
+//    CGRect frame = [[UIScreen mainScreen] bounds];
+    CGRect frame = [self bounds];
 
 //    if (iOSVersion() < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
 //        frame.size = CGSizeMake(frame.size.height,frame.size.width);
