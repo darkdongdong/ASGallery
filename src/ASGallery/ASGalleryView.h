@@ -49,7 +49,7 @@
 -(void)stopVideo;
 -(void)reloadData;
 
--(void)scrollToIndex:(NSUInteger)index;
+-(void)scrollToIndex:(NSUInteger)index animated:(BOOL)animated;
 
 - (ASGalleryPage*) visiblePageForIndex:(NSUInteger)index;
 

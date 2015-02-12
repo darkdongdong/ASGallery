@@ -90,13 +90,13 @@
     
 }
 
--(void)scrollToIndex:(NSUInteger)index
+-(void)scrollToIndex:(NSUInteger)index animated:(BOOL)animated
 {
     pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
 
     CGFloat pageWidth = pagingScrollView.frame.size.width;
     CGFloat newOffset = index * pageWidth;
-    pagingScrollView.contentOffset = CGPointMake(newOffset, 0);
+    [pagingScrollView setContentOffset:CGPointMake(newOffset, 0) animated:animated];
 
     [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:YES];
 }
