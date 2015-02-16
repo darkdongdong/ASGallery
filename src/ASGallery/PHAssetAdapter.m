@@ -63,7 +63,7 @@
         case ASGalleryImageThumbnail:
             break;
         case ASGalleryImagePreview:
-            sourceSize = CGSizeMake(320, 568);
+            sourceSize = CGSizeMake(160, 160);
             break;
         case ASGalleryImageFullScreen:
             sourceSize = CGSizeMake(640, 1156);
