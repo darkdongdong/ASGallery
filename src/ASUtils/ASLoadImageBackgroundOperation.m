@@ -33,12 +33,7 @@
     if ([self isCancelled])
         return;
 
-//    UIImage *image = nil;
-//    if (self.imageFetchBlock)
-//        image = self.imageFetchBlock();
-    
     if (_asset != nil) {
-        
         __weak ASGalleryAssetBase *weakAsset = _asset;
         [_asset imageForType:_imageType completion:^(UIImage *image) {
             if (image) {

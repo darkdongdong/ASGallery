@@ -57,7 +57,7 @@
 
 - (void)imageForType:(ASGalleryImageType)imageType completion:(void(^)(UIImage*))completion
 {
-    PHCachingImageManager *imageManager = [[PHCachingImageManager alloc] init];
+    PHImageManager *imageManager = [PHImageManager defaultManager];
     CGSize sourceSize = CGSizeMake(106.f, 106.f);
     switch (imageType) {
         case ASGalleryImageThumbnail:
@@ -65,8 +65,10 @@
         case ASGalleryImagePreview:
             sourceSize = CGSizeMake(160, 160);
             break;
-        case ASGalleryImageFullScreen:
-            sourceSize = CGSizeMake(640, 1156);
+        case ASGalleryImageFullScreen:{
+            CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+            sourceSize = CGSizeMake(screenSize.width, screenSize.width * 4/3);
+        }
             break;
         case ASGalleryImageFullResolution:
             sourceSize = CGSizeMake(_asset.pixelWidth, _asset.pixelHeight);
@@ -82,8 +84,8 @@
                                options:nil
                          resultHandler:^(UIImage *result, NSDictionary *info) {
                              completion(result);
-        
-    }];
+                             
+                         }];
 }
 
 @end
