@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 #import "ASGalleryViewController.h"
+#import "ASGalleryAssetBase.h"
 
 @class ASGalleryPage;
 @protocol ASGalleryPageDelegate <NSObject>
@@ -36,14 +37,13 @@
 @end
 
 
-@protocol ASGalleryAsset;
 @interface ASGalleryPage : UIView
 
 @property(nonatomic, weak) id<ASGalleryPageDelegate> delegate;
-@property(nonatomic,strong) id<ASGalleryAsset> asset;
+@property(nonatomic,strong) ASGalleryAssetBase *asset;
 @property(nonatomic,assign) ASGalleryImageType imageType;
 
-@property(nonatomic,strong,readonly) ASImageScrollView* imageView;
+@property(nonatomic,weak,readonly) ASImageScrollView* imageView;
 
 -(void)pause;
 -(void)stop;

@@ -29,6 +29,8 @@
 #import "ASGalleryViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 
+#import "ASLoadImageQueue.h"
+
 
 @interface ASGalleryPage ()<ASGalleryImageView,ASImageScrollViewDelegate>{
     ASImageScrollView* imageScrollView;
@@ -36,7 +38,7 @@
     ASGalleryImageType _currentLoadingImageType;
     
     MPMoviePlayerController *moviePlayer;
-
+    
     UIButton*   playButton;
 }
 
@@ -75,14 +77,13 @@ static UIImage* playButtonImage()
     BOOL downgrade = NO;
     if (_imageType > _currentLoadingImageType){
         _currentLoadingImageType++;
-        
-            if (![_asset isImageForTypeAvailable:ASGalleryImagePreview] && _currentLoadingImageType == ASGalleryImagePreview){
-                
-                if (_imageType > _currentLoadingImageType){
-                    _currentLoadingImageType++;
-                }else
-                    return;
-            }
+        if (![_asset isImageForTypeAvailable:ASGalleryImagePreview] && _currentLoadingImageType == ASGalleryImagePreview){
+            
+            if (_imageType > _currentLoadingImageType){
+                _currentLoadingImageType++;
+            }else
+                return;
+        }
     }else if (_imageType < _currentLoadingImageType){
         
         _currentLoadingImageType--;
@@ -90,7 +91,7 @@ static UIImage* playButtonImage()
     }else
         return;
     
-//    DLog(@"%@ _imageType = %u _currentLoadingImageType = %u",self,_imageType,_currentLoadingImageType);
+    //    DLog(@"%@ _imageType = %u _currentLoadingImageType = %u",self,_imageType,_currentLoadingImageType);
     
     if (_currentLoadingImageType == ASGalleryImagePreview && downgrade)
         return;
@@ -102,8 +103,13 @@ static UIImage* playButtonImage()
         imageScrollView.image = nil;
         return;
     }
+    
+    [_asset imageForType:_currentLoadingImageType
+              completion:^(UIImage *image) {
+                  [imageScrollView setImage:image];
+              }];
+    
     [loadImageOp cancel];
-    loadImageOp = [_asset loadImage:self withImageType:_currentLoadingImageType];
 }
 
 -(void)setImage:(UIImage *)image
@@ -233,7 +239,7 @@ static UIImage* playButtonImage()
     if ([self.delegate respondsToSelector:@selector(playButtonPressed:)]){
         [self.delegate playButtonPressed:self];
     }
-
+    
     assert(_asset.isVideo);
     moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:_asset.url];
     
@@ -277,10 +283,10 @@ static UIImage* playButtonImage()
 }
 
 
--(void)setAsset:(id<ASGalleryAsset>)asset
+-(void)setAsset:(ASGalleryAssetBase *)asset
 {
     _asset = asset;
-   
+    
     imageScrollView.isVideo = _asset.isVideo;
     if (_asset.isVideo) {
         playButton = [self createPlayButton];
