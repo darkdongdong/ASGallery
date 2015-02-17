@@ -74,29 +74,30 @@ static UIImage* playButtonImage()
 
 -(void)loadImageIfNeeded
 {
-    BOOL downgrade = NO;
-    if (_imageType > _currentLoadingImageType){
-        _currentLoadingImageType++;
-        if (![_asset isImageForTypeAvailable:ASGalleryImagePreview] && _currentLoadingImageType == ASGalleryImagePreview){
-            
-            if (_imageType > _currentLoadingImageType){
-                _currentLoadingImageType++;
-            }else
-                return;
-        }
-    }else if (_imageType < _currentLoadingImageType){
-        
-        _currentLoadingImageType--;
-        downgrade = YES;
-    }else
-        return;
-    
-    //    DLog(@"%@ _imageType = %u _currentLoadingImageType = %u",self,_imageType,_currentLoadingImageType);
-    
-    if (_currentLoadingImageType == ASGalleryImagePreview && downgrade)
-        return;
-    /* Never downgrade from fullscreen to preview or None look at the implementation tilePagesWithMaxImageType,
-     if remove this string -> will downgrade to Preview while a little shift photo!  */
+    //    BOOL downgrade = NO;
+    //    if (_imageType > _currentLoadingImageType){
+    //        _currentLoadingImageType++;
+    //        if (![_asset isImageForTypeAvailable:ASGalleryImagePreview] && _currentLoadingImageType == ASGalleryImagePreview){
+    //
+    //            if (_imageType > _currentLoadingImageType){
+    //                _currentLoadingImageType++;
+    //            }else
+    //                return;
+    //        }
+    //    }else if (_imageType < _currentLoadingImageType){
+    //
+    //        _currentLoadingImageType--;
+    //        downgrade = YES;
+    //    }else
+    //        return;
+    //
+    //    //    DLog(@"%@ _imageType = %u _currentLoadingImageType = %u",self,_imageType,_currentLoadingImageType);
+    //
+    //    if (_currentLoadingImageType == ASGalleryImagePreview && downgrade)
+    //        return;
+    //    /* Never downgrade from fullscreen to preview or None look at the implementation tilePagesWithMaxImageType,
+    //     if remove this string -> will downgrade to Preview while a little shift photo!  */
+    _currentLoadingImageType = _imageType;
     
     if (_currentLoadingImageType == ASGalleryImageNone)
     {

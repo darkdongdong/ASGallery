@@ -32,7 +32,7 @@
     BOOL    processingRotationNow;
     BOOL    playBackStarted;
     BOOL    hideControls;
-
+    
     UITapGestureRecognizer* gestureSingleTap;
     UITapGestureRecognizer* gestureDoubleTap;
     
@@ -50,7 +50,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        [self initViews];
+        //        [self initViews];
     }
     return self;
 }
@@ -67,7 +67,7 @@
     pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
     pagingScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     pagingScrollView.delegate = self;
-   
+    
     self.backgroundColor = [UIColor blackColor];
     [self addSubview:pagingScrollView];
     
@@ -76,7 +76,7 @@
     _visiblePages  = [[NSMutableSet alloc] init];
     
     _fullScreenImagesToPreload = 1;
-    _previewImagesToPreload = 5;
+    _previewImagesToPreload = 0;
     
     gestureDoubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
     gestureDoubleTap.delegate = self;
@@ -93,11 +93,11 @@
 -(void)scrollToIndex:(NSUInteger)index animated:(BOOL)animated
 {
     pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
-
+    
     CGFloat pageWidth = pagingScrollView.frame.size.width;
     CGFloat newOffset = index * pageWidth;
     [pagingScrollView setContentOffset:CGPointMake(newOffset, 0) animated:animated];
-
+    
     [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:YES];
 }
 
@@ -132,11 +132,11 @@
 }
 
 - (CGRect)frameForPagingScrollView {
-//    CGRect frame = [[UIScreen mainScreen] bounds];
+    //    CGRect frame = [[UIScreen mainScreen] bounds];
     CGRect frame = [self bounds];
-
-//    if (iOSVersion() < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
-//        frame.size = CGSizeMake(frame.size.height,frame.size.width);
+    
+    //    if (iOSVersion() < 8 && UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+    //        frame.size = CGSizeMake(frame.size.height,frame.size.width);
     frame.origin.x -= PADDING;
     frame.size.width += (2 * PADDING);
     return frame;
@@ -175,7 +175,7 @@
 -(void)viewWillAppear
 {
     callDidChangedFirstly = YES;
-
+    
     CGFloat pageWidth = pagingScrollView.frame.size.width;
     CGFloat newOffset = self.selectedIndex * pageWidth;
     pagingScrollView.contentOffset = CGPointMake(newOffset, 0);
@@ -221,7 +221,7 @@
     assert(index >=0);
     ASGalleryPage *page = [self visiblePageForIndex:index];
     if (!page) {
-
+        
         page = [self dequeueRecycledPage];
         if (page == nil) {
             page = [self createGalleryPage];
@@ -230,10 +230,10 @@
         
         page.tag = index;
         page.frame = [self frameForPageAtIndex:index];
-
+        
         [pagingScrollView addSubview:page];
         [_visiblePages addObject:page];
-
+        
         reload = YES; // initally load page
     }
     
@@ -241,7 +241,7 @@
         [page prepareForReuse];
         page.asset = [self.dataSource galleryView:self assetAtIndex:index];
     }
-
+    
     page.imageType = imageType;
 }
 
@@ -265,7 +265,7 @@
     
     
     NSUInteger numberOfAssets = [self.dataSource numberOfAssetsInGalleryView:self];
-
+    
     CGRect visibleBounds = pagingScrollView.bounds;
     
     int firstVisiblePageIndex = floorf(CGRectGetMinX(visibleBounds) / CGRectGetWidth(visibleBounds));
@@ -301,10 +301,10 @@
         }
     }
     [_visiblePages minusSet:recycledPages];
-
+    
     for (int index = firstVisiblePageIndex; index <= lastVisiblePageIndex; index++)
         [self preloadPageWithIndex:index imageType:maxImageType reload:reload];
-
+    
     for (int step = 1; step <= self.previewImagesToPreload; step++) {
         
         ASGalleryImageType imageType = step > self.fullScreenImagesToPreload ? ASGalleryImagePreview: maxImageType;
@@ -320,7 +320,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    [self tilePagesWithMaxImageType:ASGalleryImagePreview reload:NO];
+    [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:NO];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -381,7 +381,7 @@
 {
     ASGalleryPage* isv = [self visiblePageForIndex:self.selectedIndex];
     [isv doubleTap:gestureRecognizer];
-
+    
     if ([self.delegate respondsToSelector:@selector(galleryViewDidTappedDouble:)])
         [self.delegate galleryViewDidTappedDouble:[self currentImageView]];
 }
