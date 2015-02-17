@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ASGalleryViewController.h"
 #import "ASImageScrollView.h"
+#import "ASGalleryAssetBase.h"
 
 @class ASGalleryView;
 @protocol ASGalleryViewDataSource <NSObject>
 
 - (NSUInteger) numberOfAssetsInGalleryView:(ASGalleryView*)view;
-- (id<ASGalleryAsset>) galleryView:(ASGalleryView*)view assetAtIndex:(NSUInteger)index;
+- (ASGalleryAssetBase *) galleryView:(ASGalleryView*)view assetAtIndex:(NSUInteger)index;
 
 @end
 
