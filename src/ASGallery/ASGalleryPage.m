@@ -212,20 +212,22 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     
-    avPlayer = [AVPlayer playerWithURL:_asset.url];
-    avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemDidReachEnd:)
-                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:[avPlayer currentItem]];
-    
-    [avPlayerLayer setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.layer addSublayer:avPlayerLayer];
-        [avPlayer play];
-    });
+    [_asset requestURL:^(NSURL *url) {
+        avPlayer = [AVPlayer playerWithURL:url];
+        avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playerItemDidReachEnd:)
+                                                     name:AVPlayerItemDidPlayToEndTimeNotification
+                                                   object:[avPlayer currentItem]];
+        
+        [avPlayerLayer setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.layer addSublayer:avPlayerLayer];
+            [avPlayer play];
+        });
+    }];
 }
 
 -(void)setAsset:(ASGalleryAssetBase *)asset

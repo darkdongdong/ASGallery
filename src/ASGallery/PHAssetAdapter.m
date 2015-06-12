@@ -22,9 +22,6 @@
 -(void)setAsset:(PHAsset *)asset
 {
     _asset = asset;
-    [[PHImageManager defaultManager] requestAVAssetForVideo:_asset options:nil resultHandler:^(AVAsset *asset, AVAudioMix *audioMix, NSDictionary *info) {
-        _assetURL = [(AVURLAsset *)asset URL];
-    }];
 }
 
 -(CGFloat)duration
@@ -44,6 +41,19 @@
 -(NSURL*)url
 {
     return _assetURL;
+}
+
+-(void)requestURL:(void(^)(NSURL *url))completion
+{
+    if (_assetURL) {
+        completion(_assetURL);
+        return;
+    }
+    
+    [[PHImageManager defaultManager] requestAVAssetForVideo:_asset options:nil resultHandler:^(AVAsset *asset, AVAudioMix *audioMix, NSDictionary *info) {
+        _assetURL = [(AVURLAsset *)asset URL];
+        completion(_assetURL);
+    }];
 }
 
 -(CGSize)dimensions
