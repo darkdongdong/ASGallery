@@ -175,6 +175,7 @@
 {
     AVPlayerItem *playerItem = [notification object];
     [playerItem seekToTime:kCMTimeZero];
+    [avPlayer play];
 }
 
 -(void)pause
@@ -200,15 +201,29 @@
         return;
     }
     
-    if (avPlayer == nil) {
-        return;
-    }
-    
     if ([self.delegate respondsToSelector:@selector(playButtonPressed:)]){
         [self.delegate playButtonPressed:self];
     }
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    if (avPlayerLayer) {
+        [avPlayerLayer removeFromSuperlayer];
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    
+    avPlayer = [AVPlayer playerWithURL:_asset.url];
+    avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidReachEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:[avPlayer currentItem]];
+    
+    [avPlayerLayer setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.layer addSublayer:avPlayerLayer];
         [avPlayer play];
     });
 }
@@ -220,19 +235,6 @@
     imageScrollView.isVideo = _asset.isVideo;
     if (_asset.isVideo) {
         assert(_asset.isVideo);
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-        
-        avPlayer = [AVPlayer playerWithURL:_asset.url];
-        avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playerItemDidReachEnd:)
-                                                     name:AVPlayerItemDidPlayToEndTimeNotification
-                                                   object:[avPlayer currentItem]];
-        [avPlayerLayer setFrame:self.bounds];
-        [self.layer addSublayer:avPlayerLayer];
     }
 }
 
