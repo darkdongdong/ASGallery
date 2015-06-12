@@ -45,14 +45,15 @@
 
 @property(nonatomic,weak,readonly) ASImageScrollView* imageView;
 
+-(void)play;
 -(void)pause;
 -(void)stop;
+-(BOOL)isPlaying;
 -(void)prepareForReuse;
 -(void)updateFrame:(CGRect)frame;
 -(void)resetToDefaults;
 
 -(void)doubleTap:(UITapGestureRecognizer *)gestureRecognizer;
-
 
 -(void)menuBarsWillAppear;
 -(void)willAnimateMenuBarsAppearWithDuration:(CGFloat)duration;

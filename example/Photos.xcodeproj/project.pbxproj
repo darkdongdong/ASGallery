@@ -38,6 +38,8 @@
 		B529B1521A839B7C003B1AD9 /* PHAssetAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = B529B1511A839B7C003B1AD9 /* PHAssetAdapter.m */; };
 		B529B1541A83A538003B1AD9 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B529B1531A83A538003B1AD9 /* Photos.framework */; };
 		B57694C41A7F96A9000EFF55 /* ASGalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B57694C21A7F96A9000EFF55 /* ASGalleryViewController.m */; };
+		B5FA0F961B27194D00BEE800 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 102CAC86174B68FB007B75BE /* AVFoundation.framework */; };
+		B5FA0F981B27196F00BEE800 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5FA0F971B27196F00BEE800 /* CoreMedia.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -91,6 +93,7 @@
 		B529B1531A83A538003B1AD9 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		B57694C21A7F96A9000EFF55 /* ASGalleryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASGalleryViewController.m; sourceTree = "<group>"; };
 		B57694C31A7F96A9000EFF55 /* ASGalleryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASGalleryViewController.h; sourceTree = "<group>"; };
+		B5FA0F971B27196F00BEE800 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +101,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5FA0F981B27196F00BEE800 /* CoreMedia.framework in Frameworks */,
+				B5FA0F961B27194D00BEE800 /* AVFoundation.framework in Frameworks */,
 				B529B1541A83A538003B1AD9 /* Photos.framework in Frameworks */,
 				B52912E21A7F666200D980E8 /* CoreImage.framework in Frameworks */,
 				102CAC8F174B6C52007B75BE /* AssetsLibrary.framework in Frameworks */,
@@ -132,6 +137,7 @@
 		102CAC4E174B6629007B75BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B5FA0F971B27196F00BEE800 /* CoreMedia.framework */,
 				B529B1531A83A538003B1AD9 /* Photos.framework */,
 				B52912E11A7F666200D980E8 /* CoreImage.framework */,
 				102CAC8E174B6C52007B75BE /* AssetsLibrary.framework */,

@@ -11,7 +11,8 @@
 @interface PHAssetAdapter(){
     PHAssetMediaType _type;
     CGSize _dimensions;
-    NSNumber* _duration;
+    NSNumber * _duration;
+    NSURL *_assetURL;
 }
 
 @end
@@ -21,7 +22,9 @@
 -(void)setAsset:(PHAsset *)asset
 {
     _asset = asset;
-    [self url];
+    [[PHImageManager defaultManager] requestAVAssetForVideo:_asset options:nil resultHandler:^(AVAsset *asset, AVAudioMix *audioMix, NSDictionary *info) {
+        _assetURL = [(AVURLAsset *)asset URL];
+    }];
 }
 
 -(CGFloat)duration
@@ -40,7 +43,7 @@
 
 -(NSURL*)url
 {
-    return nil;
+    return _assetURL;
 }
 
 -(CGSize)dimensions

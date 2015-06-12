@@ -27,30 +27,19 @@
 #import "ASGalleryPage.h"
 #import "ASImageScrollView.h"
 #import "ASGalleryViewController.h"
-#import <MediaPlayer/MediaPlayer.h>
+#import <AVFoundation/AVFoundation.h>
 
 #import "ASLoadImageQueue.h"
 
 
 @interface ASGalleryPage ()<ASGalleryImageView,ASImageScrollViewDelegate>{
     ASImageScrollView* imageScrollView;
-    NSOperation* loadImageOp;
     ASGalleryImageType _currentLoadingImageType;
     
-    MPMoviePlayerController *moviePlayer;
-    
-    UIButton*   playButton;
+    AVPlayer *avPlayer;
+    AVPlayerLayer *avPlayerLayer;
 }
-
 @end
-
-static UIImage* playButtonImage()
-{
-    static UIImage* image = nil;
-    if (image == nil)
-        image = [UIImage imageNamed:@"playButton.png"];
-    return image;
-}
 
 @implementation ASGalleryPage
 
@@ -74,29 +63,6 @@ static UIImage* playButtonImage()
 
 -(void)loadImageIfNeeded
 {
-    //    BOOL downgrade = NO;
-    //    if (_imageType > _currentLoadingImageType){
-    //        _currentLoadingImageType++;
-    //        if (![_asset isImageForTypeAvailable:ASGalleryImagePreview] && _currentLoadingImageType == ASGalleryImagePreview){
-    //
-    //            if (_imageType > _currentLoadingImageType){
-    //                _currentLoadingImageType++;
-    //            }else
-    //                return;
-    //        }
-    //    }else if (_imageType < _currentLoadingImageType){
-    //
-    //        _currentLoadingImageType--;
-    //        downgrade = YES;
-    //    }else
-    //        return;
-    //
-    //    //    DLog(@"%@ _imageType = %u _currentLoadingImageType = %u",self,_imageType,_currentLoadingImageType);
-    //
-    //    if (_currentLoadingImageType == ASGalleryImagePreview && downgrade)
-    //        return;
-    //    /* Never downgrade from fullscreen to preview or None look at the implementation tilePagesWithMaxImageType,
-    //     if remove this string -> will downgrade to Preview while a little shift photo!  */
     _currentLoadingImageType = _imageType;
     
     if (_currentLoadingImageType == ASGalleryImageNone)
@@ -109,8 +75,6 @@ static UIImage* playButtonImage()
               completion:^(UIImage *image) {
                   [imageScrollView setImage:image];
               }];
-    
-    [loadImageOp cancel];
 }
 
 -(void)setImage:(UIImage *)image
@@ -137,12 +101,19 @@ static UIImage* playButtonImage()
 
 -(void)prepareForReuse
 {
-    [playButton removeFromSuperview];
-    playButton = nil;
-    [loadImageOp cancel];
-    loadImageOp = nil;
+    
     _imageType = ASGalleryImageNone;
     _currentLoadingImageType = ASGalleryImageNone;
+    
+    if (avPlayer != nil) {
+        [avPlayer pause];
+        avPlayer = nil;
+    }
+    
+    if (avPlayerLayer != nil) {
+        [avPlayerLayer removeFromSuperlayer];
+    }
+    
     [imageScrollView prepareForReuse];
 }
 
@@ -159,11 +130,6 @@ static UIImage* playButtonImage()
 {
     self.imageType = ASGalleryImageFullScreen;
     [imageScrollView resetToDefaults];
-}
-
--(void)dealloc
-{
-    [loadImageOp cancel];
 }
 
 -(UIImage*)image
@@ -200,89 +166,52 @@ static UIImage* playButtonImage()
     }
     
     CGRect zoomRect = [imageScrollView zoomRectForScale:newScale withCenter:point];
-    //    NSLog(@"point = %@ zoomRect = %@",NSStringFromCGPoint(point),NSStringFromCGRect(zoomRect));
     [imageScrollView zoomToRect:zoomRect animated:YES];
 }
 
 
 /*  video support */
--(void)moviePlayBackDidFinish:(NSDictionary*)userInfo
+- (void)playerItemDidReachEnd:(NSNotification *)notification
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:moviePlayer];
-    moviePlayer.scalingMode = imageScrollView.zoomScale > imageScrollView.minimumZoomScale ? MPMovieScalingModeAspectFill : UIViewContentModeScaleAspectFit;
-    imageScrollView.zoomScale = moviePlayer.scalingMode == MPMovieScalingModeAspectFit ? imageScrollView.minimumZoomScale:imageScrollView.maximumZoomScale;
-    
-    [moviePlayer.view removeFromSuperview];
-    moviePlayer = nil;
-    
-    if ([self.delegate respondsToSelector:@selector(playbackFinished:)]){
-        [self.delegate playbackFinished:self];
-    }
+    AVPlayerItem *playerItem = [notification object];
+    [playerItem seekToTime:kCMTimeZero];
 }
 
 -(void)pause
 {
-    [moviePlayer pause];
+    if (_asset.isVideo == NO) {
+        return;
+    }
+    [avPlayer pause];
 }
 
 -(void)stop
 {
-    if ( _asset.isVideo )
-    {
-        [moviePlayer stop];
-        [self moviePlayBackDidFinish:nil];
+    if (_asset.isVideo == NO) {
+        return;
     }
+    [avPlayer pause];
+    [[avPlayer currentItem] seekToTime:kCMTimeZero];
 }
 
 -(void)play
 {
-    // hideBars if need
+    if (_asset.isVideo == NO) {
+        return;
+    }
+    
+    if (avPlayer == nil) {
+        return;
+    }
+    
     if ([self.delegate respondsToSelector:@selector(playButtonPressed:)]){
         [self.delegate playButtonPressed:self];
     }
     
-    assert(_asset.isVideo);
-    moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:_asset.url];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(moviePlayBackDidFinish:)
-                                                 name:MPMoviePlayerPlaybackDidFinishNotification
-                                               object:moviePlayer];
-    
-    moviePlayer.controlStyle = MPMovieControlStyleFullscreen;
-    // moviePlayer.shouldAutoplay = YES;
-    
-    
-    [moviePlayer.view setFrame: self.bounds];
-    moviePlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    moviePlayer.scalingMode = imageScrollView.zoomScale > imageScrollView.minimumZoomScale ? MPMovieScalingModeAspectFill : UIViewContentModeScaleAspectFit;
-    
-    [self addSubview:moviePlayer.view];
-    
-    [moviePlayer play];
-    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [avPlayer play];
+    });
 }
-
--(UIButton*)createPlayButton
-{
-    UIImage* buttonImage = playButtonImage();
-    CGSize buttonSize = buttonImage.size;
-    CGRect frameToCenter = CGRectMake(floorf((self.bounds.size.width - buttonSize.width) / 2),
-                                      floorf((self.bounds.size.height - buttonSize.height) / 2),
-                                      buttonSize.width,
-                                      buttonSize.height);
-    UIButton* button = [[UIButton alloc] initWithFrame:frameToCenter];
-    button.autoresizingMask =   UIViewAutoresizingFlexibleLeftMargin    |
-    UIViewAutoresizingFlexibleTopMargin     |
-    UIViewAutoresizingFlexibleRightMargin   |
-    UIViewAutoresizingFlexibleBottomMargin;
-    
-    [button setImage:buttonImage forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
-    
-    return button;
-}
-
 
 -(void)setAsset:(ASGalleryAssetBase *)asset
 {
@@ -290,9 +219,31 @@ static UIImage* playButtonImage()
     
     imageScrollView.isVideo = _asset.isVideo;
     if (_asset.isVideo) {
-        playButton = [self createPlayButton];
-        [self addSubview:playButton];
+        assert(_asset.isVideo);
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+        
+        avPlayer = [AVPlayer playerWithURL:_asset.url];
+        avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playerItemDidReachEnd:)
+                                                     name:AVPlayerItemDidPlayToEndTimeNotification
+                                                   object:[avPlayer currentItem]];
+        [avPlayerLayer setFrame:self.bounds];
+        [self.layer addSublayer:avPlayerLayer];
     }
+}
+
+- (BOOL)isPlaying
+{
+    
+    if (avPlayer != nil && avPlayer.rate > 0 && !avPlayer.error) {
+        return YES;
+    }
+    
+    return NO;
 }
 
 -(void)menuBarsWillAppear

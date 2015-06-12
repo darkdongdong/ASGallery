@@ -30,7 +30,6 @@
     
     NSUInteger  indexForResetZoom;
     BOOL    processingRotationNow;
-    BOOL    playBackStarted;
     BOOL    hideControls;
     
     UITapGestureRecognizer* gestureSingleTap;
@@ -280,6 +279,9 @@
         if (self.selectedIndex != firstVisiblePageIndex || callDidChangedFirstly){
             self.selectedIndex = firstVisiblePageIndex;
             callDidChangedFirstly = NO;
+            
+            [[self visiblePageForIndex:self.selectedIndex] play];
+            
             if ([self.delegate respondsToSelector:@selector(galleryViewDidChangedPage:)])
                 [self.delegate galleryViewDidChangedPage:[self currentImageView]];
         }
@@ -391,20 +393,6 @@
     return [self visiblePageForIndex:self.selectedIndex].imageView;
 }
 
--(void)playButtonPressed:(ASGalleryPage *)page
-{
-    pagingScrollView.scrollEnabled = NO;
-    playBackStarted = YES;
-    self.currentPlayingVideoPage = page;
-}
-
--(void)playbackFinished:(ASGalleryPage *)page
-{
-    pagingScrollView.scrollEnabled = YES;
-    playBackStarted = NO;
-    self.currentPlayingVideoPage = nil;
-}
-
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     ASGalleryPage* isv = [self visiblePageForIndex:self.selectedIndex];
     [isv pause];
@@ -412,8 +400,14 @@
 
 -(void)singleTap:(UITapGestureRecognizer *)gestureRecognizer
 {
-    if (playBackStarted)
-        return; // Ignoring, because now PlayBackStarted
+    ASGalleryPage* isv = [self visiblePageForIndex:self.selectedIndex];
+    if (isv.asset.isVideo) {
+        if (isv.isPlaying) {
+            
+        } else {
+            [isv play];
+        }
+    }
     
     if ([self.delegate respondsToSelector:@selector(galleryViewDidTappedSingle:)])
         [self.delegate galleryViewDidTappedSingle:[self currentImageView]];
