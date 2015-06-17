@@ -91,11 +91,20 @@
 
 -(void)scrollToIndex:(NSUInteger)index animated:(BOOL)animated
 {
+    [self scrollToIndex:index autoPlay:NO animated:animated];
+}
+
+-(void)scrollToIndex:(NSUInteger)index autoPlay:(BOOL)autoPlay animated:(BOOL)animated
+{
     pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
     
     CGFloat pageWidth = pagingScrollView.frame.size.width;
     CGFloat newOffset = index * pageWidth;
     [pagingScrollView setContentOffset:CGPointMake(newOffset, 0) animated:animated];
+    
+    if (autoPlay) {
+        [[self visiblePageForIndex:self.selectedIndex] play];
+    }
     
     [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:YES];
 }
@@ -400,15 +409,6 @@
 
 -(void)singleTap:(UITapGestureRecognizer *)gestureRecognizer
 {
-    ASGalleryPage* isv = [self visiblePageForIndex:self.selectedIndex];
-    if (isv.asset.isVideo) {
-        if (isv.isPlaying) {
-            
-        } else {
-            [isv play];
-        }
-    }
-    
     if ([self.delegate respondsToSelector:@selector(galleryViewDidTappedSingle:)])
         [self.delegate galleryViewDidTappedSingle:[self currentImageView]];
 }
