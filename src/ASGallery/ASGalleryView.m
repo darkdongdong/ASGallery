@@ -86,7 +86,6 @@
     gestureSingleTap.delegate = self;
     [gestureSingleTap requireGestureRecognizerToFail:gestureDoubleTap];
     [self addGestureRecognizer:gestureSingleTap];
-    
 }
 
 -(void)scrollToIndex:(NSUInteger)index animated:(BOOL)animated
