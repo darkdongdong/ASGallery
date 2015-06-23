@@ -71,6 +71,8 @@
         return;
     }
     
+//    __weak ASGalleryAssetBase *weakAsset = _asset;
+//    __weak ASGalleryPage *SELF = self;
     [_asset imageForType:_currentLoadingImageType
               completion:^(UIImage *image) {
                   [imageScrollView setImage:image];
@@ -88,6 +90,9 @@
     if (_imageType != imageType){
         _imageType = imageType;
         [self loadImageIfNeeded];
+//        if (_asset.isVideo && ![self isPlaying]) {
+//            [self play];
+//        }
     }
 }
 
@@ -105,7 +110,7 @@
     _imageType = ASGalleryImageNone;
     _currentLoadingImageType = ASGalleryImageNone;
     
-    if (avPlayer != nil) {
+    if ([self isPlaying]) {
         [avPlayer pause];
         avPlayer = nil;
     }
@@ -175,15 +180,17 @@
 {
     AVPlayerItem *playerItem = [notification object];
     [playerItem seekToTime:kCMTimeZero];
-    [avPlayer play];
+    if (![self isPlaying]) {
+        [avPlayer play];
+    }
 }
 
 -(void)pause
 {
-    if (_asset.isVideo == NO) {
-        return;
-    }
-    [avPlayer pause];
+//    if (_asset.isVideo == NO) {
+//        return;
+//    }
+//    [avPlayer pause];
 }
 
 -(void)stop
@@ -191,13 +198,19 @@
     if (_asset.isVideo == NO) {
         return;
     }
-    [avPlayer pause];
+    if ([self isPlaying]) {
+        [avPlayer pause];
+    }
     [[avPlayer currentItem] seekToTime:kCMTimeZero];
 }
 
 -(void)play
 {
     if (_asset.isVideo == NO) {
+        return;
+    }
+    
+    if ([self isPlaying]) {
         return;
     }
     
@@ -208,9 +221,6 @@
     if (avPlayerLayer) {
         [avPlayerLayer removeFromSuperlayer];
     }
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     
     [_asset requestURL:^(NSURL *url) {
         avPlayer = [AVPlayer playerWithURL:url];
@@ -248,6 +258,12 @@
     }
     
     return NO;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
 }
 
 -(void)menuBarsWillAppear
