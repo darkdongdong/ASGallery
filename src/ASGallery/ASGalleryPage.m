@@ -31,10 +31,11 @@
 
 #import "ASLoadImageQueue.h"
 
-
 @interface ASGalleryPage ()<ASGalleryImageView,ASImageScrollViewDelegate>{
     ASImageScrollView* imageScrollView;
     ASGalleryImageType _currentLoadingImageType;
+    
+    UIView *playableView;
     
     AVPlayer *avPlayer;
     AVPlayerLayer *avPlayerLayer;
@@ -57,6 +58,11 @@
         imageScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imageScrollView.zoomDelegate = self;
         [self addSubview:imageScrollView];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playerItemDidReachEnd:)
+                                                     name:AVPlayerItemDidPlayToEndTimeNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -101,18 +107,14 @@
 
 -(void)prepareForReuse
 {
-    
     _imageType = ASGalleryImageNone;
     _currentLoadingImageType = ASGalleryImageNone;
     
-    if (avPlayer != nil) {
+    if ([self isPlaying]) {
         [avPlayer pause];
         avPlayer = nil;
     }
-    
-    if (avPlayerLayer != nil) {
-        [avPlayerLayer removeFromSuperlayer];
-    }
+    [playableView  setHidden:YES];
     
     [imageScrollView prepareForReuse];
 }
@@ -173,17 +175,26 @@
 /*  video support */
 - (void)playerItemDidReachEnd:(NSNotification *)notification
 {
-    AVPlayerItem *playerItem = [notification object];
+    if (avPlayer == nil) {
+        return;
+    }
+    if (avPlayer.currentItem != notification.object) {
+        return;
+    }
+    
+    AVPlayerItem *playerItem = [avPlayer currentItem];
     [playerItem seekToTime:kCMTimeZero];
-    [avPlayer play];
+    if (![self isPlaying]) {
+        [avPlayer play];
+    }
 }
 
 -(void)pause
 {
-    if (_asset.isVideo == NO) {
-        return;
-    }
-    [avPlayer pause];
+    //    if (_asset.isVideo == NO) {
+    //        return;
+    //    }
+    //    [avPlayer pause];
 }
 
 -(void)stop
@@ -191,7 +202,9 @@
     if (_asset.isVideo == NO) {
         return;
     }
-    [avPlayer pause];
+    if ([self isPlaying]) {
+        [avPlayer pause];
+    }
     [[avPlayer currentItem] seekToTime:kCMTimeZero];
 }
 
@@ -201,30 +214,43 @@
         return;
     }
     
+    if ([self isPlaying]) {
+        return;
+    }
+    
     if ([self.delegate respondsToSelector:@selector(playButtonPressed:)]){
         [self.delegate playButtonPressed:self];
     }
     
-    if (avPlayerLayer) {
-        [avPlayerLayer removeFromSuperlayer];
+    if (playableView) {
+        [playableView setHidden:YES];
     }
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    if (playableView == nil) {
+        playableView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+        [playableView setBackgroundColor:[UIColor blackColor]];
+        [playableView setHidden:YES];
+        [self addSubview:playableView];
+        
+        avPlayerLayer = [[AVPlayerLayer alloc] init];
+        [avPlayerLayer setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+        [playableView.layer addSublayer:avPlayerLayer];
+    }
     
     [_asset requestURL:^(NSURL *url) {
         avPlayer = [AVPlayer playerWithURL:url];
-        avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playerItemDidReachEnd:)
-                                                     name:AVPlayerItemDidPlayToEndTimeNotification
-                                                   object:[avPlayer currentItem]];
-        
-        [avPlayerLayer setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+        if (avPlayer == nil || avPlayer == nil) {
+            return;
+        }
+        [avPlayerLayer setPlayer:avPlayer];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.layer addSublayer:avPlayerLayer];
+            [playableView setHidden:NO];
+            [playableView setAlpha:0];
+            [UIView animateWithDuration:0.3 animations:^{
+                [playableView setAlpha:1];
+            }];
+            
             [avPlayer play];
         });
     }];
@@ -232,6 +258,10 @@
 
 -(void)setAsset:(ASGalleryAssetBase *)asset
 {
+    if (_asset) {
+        [_asset cancelRequest];
+        _asset = nil;
+    }
     _asset = asset;
     
     imageScrollView.isVideo = _asset.isVideo;
@@ -248,6 +278,16 @@
     }
     
     return NO;
+}
+
+- (void)dealloc
+{
+    NSLog(@"GalleryPage dealloc: %@", _asset);
+    if (_asset) {
+        [_asset cancelRequest];
+    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
 }
 
 -(void)menuBarsWillAppear

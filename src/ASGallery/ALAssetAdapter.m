@@ -68,6 +68,11 @@
     return _url;
 }
 
+- (void)cancelRequest
+{
+    
+}
+
 -(CGSize)dimensions
 {
     if (CGSizeEqualToSize(_dimensions, CGSizeZero))

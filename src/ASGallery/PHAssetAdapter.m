@@ -13,6 +13,7 @@
     CGSize _dimensions;
     NSNumber * _duration;
     NSURL *_assetURL;
+    BOOL _canceled;
 }
 
 @end
@@ -45,15 +46,25 @@
 
 -(void)requestURL:(void(^)(NSURL *url))completion
 {
+    _canceled = NO;
+    
     if (_assetURL) {
+        if (_canceled) return;
         completion(_assetURL);
         return;
     }
     
     [[PHImageManager defaultManager] requestAVAssetForVideo:_asset options:nil resultHandler:^(AVAsset *asset, AVAudioMix *audioMix, NSDictionary *info) {
+        NSLog(@"request FINISH, %d - %@", _canceled, _asset);
+        if (_canceled) return;
         _assetURL = [(AVURLAsset *)asset URL];
         completion(_assetURL);
     }];
+}
+
+- (void)cancelRequest;
+{
+    _canceled = YES;
 }
 
 -(CGSize)dimensions

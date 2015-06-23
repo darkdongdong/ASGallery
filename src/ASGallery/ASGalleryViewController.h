@@ -28,11 +28,11 @@
 #import "ASImageScrollView.h"
 
 typedef enum{
-  ASGalleryImageNone = 0,
-  ASGalleryImagePreview,
-  ASGalleryImageFullScreen,
-  ASGalleryImageFullResolution,
-  ASGalleryImageThumbnail
+    ASGalleryImageNone = 0,
+    ASGalleryImagePreview,
+    ASGalleryImageFullScreen,
+    ASGalleryImageFullResolution,
+    ASGalleryImageThumbnail
 }ASGalleryImageType;
 
 typedef void (^ASImageSetBlock)(ASGalleryImageType type, UIImage* image);
@@ -50,6 +50,7 @@ typedef void (^ASImageSetBlock)(ASGalleryImageType type, UIImage* image);
 -(NSURL*)url;
 -(CGSize)dimensions;
 -(void)requestURL:(void(^)(NSURL *url))completion;
+-(void)cancelRequest;
 @end
 
 
@@ -106,5 +107,5 @@ typedef void (^ASImageSetBlock)(ASGalleryImageType type, UIImage* image);
 
 // can be ovveride, for create and preinit ASGalleryPage subclass. also you can use galleryPageClass only or together with this method
 -(ASGalleryPage*)createGalleryPage;
-        
+
 @end
