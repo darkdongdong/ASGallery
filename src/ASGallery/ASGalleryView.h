@@ -46,6 +46,7 @@
 
 @property(nonatomic,strong) ASImageScrollView* currentImageView;
 
+-(void)clear;
 -(void)stopVideo;
 -(void)reloadData;
 

@@ -170,6 +170,15 @@
                       bounds.size.height);
 }
 
+- (void)clear
+{
+    [recycledPages removeAllObjects];
+    [_visiblePages removeAllObjects];
+    
+    _fullScreenImagesToPreload = 1;
+    _previewImagesToPreload = 0;
+}
+
 - (void)dealloc
 {
     [self removeGestureRecognizer:gestureDoubleTap];
