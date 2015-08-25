@@ -49,6 +49,7 @@
 -(void)clear;
 -(void)stopVideo;
 -(void)reloadData;
+-(UIImage *)selectedImage;
 
 -(void)scrollToIndex:(NSUInteger)index autoPlay:(BOOL)autoPlay animated:(BOOL)animated;
 -(void)scrollToIndex:(NSUInteger)index animated:(BOOL)animated;

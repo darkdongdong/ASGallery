@@ -273,6 +273,11 @@
     [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:YES];
 }
 
+-(UIImage *)selectedImage
+{
+    return [self currentImageView].image;
+}
+
 // maxImageType - needed to prevent loading FullScreen images while scrolling, because this is cause jittering
 - (void)tilePagesWithMaxImageType:(ASGalleryImageType)maxImageType reload:(BOOL)reload
 {
