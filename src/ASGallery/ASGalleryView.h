@@ -25,6 +25,7 @@
 - (void) galleryViewDidTappedSingle:(ASImageScrollView*)imageView;
 - (void) galleryViewDidTappedDouble:(ASImageScrollView*)imageView;
 - (void) galleryViewWillBeginDragging:(UIScrollView*)scrollView;
+- (void) galleryViewDidEndDecelerating:(UIScrollView*)scrollView;
 
 @end
 

@@ -404,6 +404,9 @@
         [page resetToDefaults];
     }
     [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:NO];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(galleryViewDidEndDecelerating:)]) {
+        [self.delegate galleryViewDidEndDecelerating:scrollView];
+    }
 }
 
 -(void)doubleTap:(UITapGestureRecognizer *)gestureRecognizer
