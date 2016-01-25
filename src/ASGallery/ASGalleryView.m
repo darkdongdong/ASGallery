@@ -175,6 +175,10 @@
     [recycledPages removeAllObjects];
     [_visiblePages removeAllObjects];
     
+    for (UIView* pageView in pagingScrollView.subviews) {
+        [pageView removeFromSuperview];
+    }
+    
     _fullScreenImagesToPreload = 1;
     _previewImagesToPreload = 0;
 }
