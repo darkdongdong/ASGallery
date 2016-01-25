@@ -21,10 +21,10 @@
 @protocol ASGalleryViewDelegate <NSObject>
 
 @optional
-
 - (void) galleryViewDidChangedPage:(ASImageScrollView*)imageView;
 - (void) galleryViewDidTappedSingle:(ASImageScrollView*)imageView;
 - (void) galleryViewDidTappedDouble:(ASImageScrollView*)imageView;
+- (void) galleryViewWillBeginDragging:(UIScrollView*)scrollView;
 
 @end
 

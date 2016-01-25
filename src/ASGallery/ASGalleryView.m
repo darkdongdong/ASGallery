@@ -348,6 +348,13 @@
     [self tilePagesWithMaxImageType:ASGalleryImageFullScreen reload:NO];
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(galleryViewWillBeginDragging:)]) {
+        [self.delegate galleryViewWillBeginDragging:scrollView];
+    }
+}
+
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     processingRotationNow = YES; // oto prevent incorrect scrolling in tilePages!
